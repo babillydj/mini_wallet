@@ -25,3 +25,9 @@ password = julopass
 run test:   
 - run `docker exec -it mini_wallet-web-1 sh` (container name)
 - run `python manage.py test`
+
+for any migrate or create superuser
+- run `docker exec -it mini_wallet-web-1 sh` (container name)
+- run `python manage.py makemigrations`
+- run `python manage.py migrate`
+- run `python manage.py createsuperuser`  

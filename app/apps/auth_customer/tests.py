@@ -5,7 +5,7 @@ from rest_framework.test import APIClient, APITestCase
 from .models import CustomerAuth
 
 
-class APIFeatured(APITestCase):
+class APIAuthCustomer(APITestCase):
 
     def setUp(self):
         self.client = APIClient()

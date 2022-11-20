@@ -5,7 +5,7 @@ from rest_framework.test import APIClient, APITestCase
 from .models import Balance
 
 
-class APIFeatured(APITestCase):
+class APIWallet(APITestCase):
 
     def setUp(self):
         self.client = APIClient()
@@ -20,6 +20,8 @@ class APIFeatured(APITestCase):
         # test enabled
         response = self.client.post(reverse('wallet:wallet_api_v1:generic_wallet'))
         self.assertEqual(response.status_code, 201)
+
+        ## fail if the wallet already enabled
         response = self.client.post(reverse('wallet:wallet_api_v1:generic_wallet'))
         self.assertEqual(response.status_code, 400)
 
@@ -36,8 +38,11 @@ class APIFeatured(APITestCase):
         self.assertEqual(response.status_code, 201)
         balance = Balance.objects.last()
         self.assertEqual(100000, balance.amount)
+
+        ## fail if reference_id is exists or not unique
         response = self.client.post(reverse('wallet:wallet_api_v1:top_up_wallet'), data=data)
         self.assertEqual(response.status_code, 400)
+
         data["reference_id"] = "12435246-dcb2-4929-8cc9-004ea06f5241"
         response = self.client.post(reverse('wallet:wallet_api_v1:top_up_wallet'), data=data)
         self.assertEqual(response.status_code, 201)
@@ -53,8 +58,11 @@ class APIFeatured(APITestCase):
         self.assertEqual(response.status_code, 201)
         balance = Balance.objects.last()
         self.assertEqual(150000, balance.amount)
+
+        ## fail if reference_id is exists or not unique
         response = self.client.post(reverse('wallet:wallet_api_v1:withdraw_wallet'), data=data)
         self.assertEqual(response.status_code, 400)
+
         data["reference_id"] = "1241c9bb-3acd-47dc-87db-d9ac483d20b2"
         response = self.client.post(reverse('wallet:wallet_api_v1:withdraw_wallet'), data=data)
         self.assertEqual(response.status_code, 201)
@@ -67,9 +75,12 @@ class APIFeatured(APITestCase):
         }
         response = self.client.patch(reverse('wallet:wallet_api_v1:generic_wallet'), data=data)
         self.assertEqual(response.status_code, 200)
+
+        ## fail if the wallet already disabled
         response = self.client.patch(reverse('wallet:wallet_api_v1:generic_wallet'), data=data)
         self.assertEqual(response.status_code, 400)
 
+        ## can not view, top up, nor withdraw
         response = self.client.get(reverse('wallet:wallet_api_v1:generic_wallet'))
         self.assertEqual(response.status_code, 404)
         data = {

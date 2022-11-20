@@ -13,14 +13,14 @@ RUN apk update && apk add postgresql-dev gcc python3-dev musl-dev
 
 # install dependencies
 RUN pip install --upgrade pip
-COPY ./app/requirements.txt .
+COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-#ARG CACHE_DATE=2016-01-01
+#ARG CACHE_DATE=2022-01-01
 #RUN echo 'hello'
 
 # copy entrypoint.sh
-COPY ./entrypoint.sh ./entrypoint.sh
+COPY entrypoint.sh .
 RUN sed -i 's/\r$//g' /src/app/entrypoint.sh
 RUN chmod +x /src/app/entrypoint.sh
 
